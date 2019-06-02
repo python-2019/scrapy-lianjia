@@ -5,6 +5,7 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import csv
+import datetime
 
 from scrapy.conf import settings
 
@@ -19,12 +20,38 @@ class LianjiaPipeline(object):
         self.csv_writer.writerow(headers)
 
     def process_item(self, item, spider):
-        row = [item['name'], item['addr'], item['unit_price'], item['total_price'], item['base_info'],
-               item['apartment'], item['area'],
-               item['advantage'], item['start_time'], item['href']]
-        self.csv_writer.writerow(row)
-        print(row)
-        return item
+        if self.time_filter(item['start_time']):
+            row = [item['name'], item['addr'], item['unit_price'], item['total_price'], item['base_info'],
+                   item['apartment'], item['area'],
+                   item['advantage'], item['start_time'], item['href']]
+            self.csv_writer.writerow(row)
+            print(row)
+            return item
 
     def close_spider(self, spider):
         self.file.closed()
+
+    def time_filter(self,date_str):
+        """
+        过滤开盘时间2019年之前的
+        :param date_str: 时间格式字符串 .分割
+        :return: bool
+        """
+        time_limit = '2018.12.31'
+        time_limit_timestamp = datetime.datetime.strptime(time_limit, '%Y.%m.%d').timestamp()
+        try:
+            date = datetime.datetime.strptime(date_str, '%Y.%m.%d')
+            timestamp = date.timestamp()
+            if timestamp - time_limit_timestamp > 0:
+                return True
+            else:
+                print("当前时间小于: "+time_limit)
+                return False
+        except Exception:
+            date = datetime.datetime.strptime(date_str, '%Y.%m')
+            timestamp = date.timestamp()
+            if timestamp - time_limit_timestamp > 0:
+                return True
+            else:
+                print("当前时间小于: "+time_limit)
+                return False
