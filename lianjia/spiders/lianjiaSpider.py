@@ -11,6 +11,8 @@ class lianjiaSpider(scrapy.Spider):
     host = "https://cd.fang.lianjia.com"
     start_urls = [host + "/loupan/"]
     page_url = "/loupan/pg"
+    # 开始页码
+    page_start = 1
     # 爬取前100页
     page_last = 100
 
@@ -42,10 +44,12 @@ class lianjiaSpider(scrapy.Spider):
         # page = response.xpath("//span[@class='active']/text()").extract_first()
         # 最大页码
         # max_page = response.xpath("//span[contains(text(),'...')]/following-sibling::a[1]/text()").extract_first()
-        for page in range(1, self.page_last):
-            next_page_url = self.host + self.page_url + str((page + 1)) + "/"
-            print(next_page_url)
-            yield scrapy.Request(next_page_url, callback=self.parse)
+        # 下一页
+        next_page = self.page_start + 1
+        self.page_start = next_page
+        next_page_url = self.host + self.page_url + str((next_page + 1))
+        print(next_page_url)
+        yield scrapy.Request(next_page_url, callback=self.parse)
 
     def parse_detail(self, response):
         item = response.meta['item']
