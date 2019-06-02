@@ -48,7 +48,7 @@ class lianjiaSpider(scrapy.Spider):
         if self.now_page < self.page_last:
             next_page = self.now_page + 1
             self.now_page = next_page
-            next_page_url = self.host + self.page_url + str((next_page + 1))
+            next_page_url = self.host + self.page_url + str(next_page)
             print(next_page_url)
             yield scrapy.Request(next_page_url, callback=self.parse)
 
