@@ -22,5 +22,8 @@ class LianjiaPipeline(object):
         row = [item['name'], item['addr'], item['base_info'], item['apartment'], item['area'], item['unit_price'],
                item['total_price'], item['advantage'], item['start_time'], item['href']]
         self.csv_writer.writerow(row)
-        print("====="+str(row)+"====")
+        print(row)
         return item
+
+    def close_spider(self, spider):
+        self.file.closed()
