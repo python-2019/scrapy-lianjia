@@ -54,5 +54,5 @@ class lianjiaSpider(scrapy.Spider):
 
     def parse_detail(self, response):
         item = response.meta['item']
-        item['start_time'] = response.xpath("//p[@class='when manager']/span[2]/text()").extract_first()
+        item['start_time'] = response.xpath("//p[@class='when']/span[2]/text()").extract_first()
         yield item
