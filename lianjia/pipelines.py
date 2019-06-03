@@ -29,7 +29,10 @@ class LianjiaPipeline(object):
             return item
 
     def close_spider(self, spider):
-        self.file.closed()
+        try:
+            self.file.closed()
+        except Exception:
+            print("===数据存储完毕===")
 
     def time_filter(self,date_str):
         """
@@ -57,4 +60,8 @@ class LianjiaPipeline(object):
                 return False
 
     def base_info_filter(self,base_info):
-        return "住宅" in base_info
+        if "住宅" in base_info:
+            return True
+        else:
+            print("当前房屋信息非住宅")
+            return  False
