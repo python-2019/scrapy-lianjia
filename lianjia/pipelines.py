@@ -20,7 +20,7 @@ class LianjiaPipeline(object):
         self.csv_writer.writerow(headers)
 
     def process_item(self, item, spider):
-        if self.time_filter(item['start_time']):
+        if self.time_filter(item['start_time']) and self.base_info_filter(item['base_info']):
             row = [item['name'], item['addr'], item['unit_price'], item['total_price'], item['base_info'],
                    item['apartment'], item['area'],
                    item['advantage'], item['start_time'], item['href']]
@@ -55,3 +55,6 @@ class LianjiaPipeline(object):
             else:
                 print("当前时间小于: "+time_limit)
                 return False
+
+    def base_info_filter(self,base_info):
+        return "住宅" in base_info
