@@ -29,10 +29,7 @@ class LianjiaPipeline(object):
             return item
 
     def close_spider(self, spider):
-        try:
-            self.file.closed()
-        except Exception:
-            print("===数据存储完毕===")
+            self.file.flush()
 
     def time_filter(self,date_str):
         """
